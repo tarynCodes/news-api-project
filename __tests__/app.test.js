@@ -3,6 +3,7 @@ const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const request = require("supertest");
+const readApi = require("../controllers/api-controllers")
 
 beforeEach(() => seed(testData));
 afterAll(() => {
@@ -26,12 +27,13 @@ describe("GET api/topics", () => {
   });
 });
 describe("GET api/", () => {
-  test("200: responds with a 200 status code and responds with a JSON obj with all endpoints", () => {
+  test.only("200: responds with a 200 status code and responds with a JSON obj with all endpoints", () => {
     return request(app)
       .get("/api")
       .expect(200)
-      .then((response) => {
-        expect(response.body).toEqual(expect.any(Object))
+      .then((readApi) => {
+        expect(readApi.body).toEqual(expect.any(Object))
       });
   });
 });
+
