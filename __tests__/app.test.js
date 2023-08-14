@@ -4,6 +4,7 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const request = require("supertest");
 const readApi = require("../controllers/api-controllers")
+const endpointsFile = require("../endpoints.json")
 
 beforeEach(() => seed(testData));
 afterAll(() => {
@@ -32,7 +33,7 @@ describe("GET api/", () => {
       .get("/api")
       .expect(200)
       .then((readApi) => {
-        expect(readApi.body).toEqual(expect.any(Object))
+        expect(readApi.body).toEqual(endpointsFile)
       });
   });
 });
