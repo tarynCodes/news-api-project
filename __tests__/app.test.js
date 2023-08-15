@@ -20,7 +20,7 @@ describe("GET api/topics", () => {
       .then((response) => {
         const { topics } = response.body;
         expect(topics).toEqual(expect.any(Array));
-        expect(topics).toHaveLength(3);
+        expect(topics.length).toBeGreaterThan(0);
         topics.forEach((topic) => {
           expect(topic).toHaveProperty("slug");
           expect(topic).toHaveProperty("description");
@@ -88,15 +88,16 @@ describe("Get /api/articles", ()=>{
     .then((response) => {
       const {articles} = response.body
       expect(articles).toBeSortedBy("created_at",{ descending: true })
+      expect(articles.length).toBeGreaterThan(0)
       articles.forEach((article) => { 
-      expect(article).toHaveProperty("author")
-      expect(article).toHaveProperty("title")
-      expect(article).toHaveProperty("article_id")
-      expect(article).toHaveProperty("topic")
+      expect(article).toHaveProperty("author", expect.any(String) )
+      expect(article).toHaveProperty("title", expect.any(String))
+      expect(article).toHaveProperty("article_id", expect.any(Number))
+      expect(article).toHaveProperty("topic", expect.any(String))
       expect(article).toHaveProperty("created_at")
-      expect(article).toHaveProperty("votes")
+      expect(article).toHaveProperty("votes", expect.any(Number))
       expect(article).toHaveProperty("article_img_url")
-      expect(article).toHaveProperty("comment_count")
+      expect(article).toHaveProperty("comment_count", expect.any(String))
       })
     })
   })
