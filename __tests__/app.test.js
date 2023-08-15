@@ -29,7 +29,7 @@ describe("GET api/topics", () => {
   });
 });
 describe("GET api/", () => {
-  test.only("200: responds with a 200 status code and responds with a JSON obj with all endpoints", () => {
+  test("200: responds with a 200 status code and responds with a JSON obj with all endpoints", () => {
     return request(app)
       .get("/api")
       .expect(200)
@@ -76,6 +76,28 @@ describe("GET /api/articles/:article_id", () => {
     .then((response) => {
       const {msg} = response.body
       expect(msg).toBe('No article found!');
+    })
+  })
+})
+
+describe("Get /api/articles", ()=>{
+  test("GET 200: responds with an array of articles sorted by descending order", () => {
+    return request(app)
+    .get("/api/articles")
+    .expect(200)
+    .then((response) => {
+      const {articles} = response.body
+      expect(articles).toBeSortedBy("created_at",{ descending: true })
+      articles.forEach((article) => { 
+      expect(article).toHaveProperty("author")
+      expect(article).toHaveProperty("title")
+      expect(article).toHaveProperty("article_id")
+      expect(article).toHaveProperty("topic")
+      expect(article).toHaveProperty("created_at")
+      expect(article).toHaveProperty("votes")
+      expect(article).toHaveProperty("article_img_url")
+      expect(article).toHaveProperty("comment_count")
+      })
     })
   })
 })
