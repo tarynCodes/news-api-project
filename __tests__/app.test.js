@@ -80,3 +80,10 @@ describe("GET /api/articles/:article_id", () => {
   })
 })
 
+describe("GET /api/articles/:article_id/comments", () => {
+  test("GET 200: responds with a 200 status code and gets a list of comments by the article id number", () => {
+    return request(app)
+    .get("/api/articles/1/comments")
+    .expect(200)
+  })
+})
