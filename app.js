@@ -4,8 +4,6 @@ const app = express();
 const {readApi} = require("../be-nc-news/controllers/api-controllers");
 const { getArticleByArticleId } = require("../be-nc-news/controllers/article-controllers")
 
-app.use(express.json())
-
 app.get('/api/topics', getTopics)
 
 app.get('/api', readApi)
