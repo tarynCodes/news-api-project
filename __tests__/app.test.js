@@ -4,6 +4,8 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const request = require("supertest");
 const readApi = require("../controllers/api-controllers")
+const endpointsFile = require("../endpoints.json")
+
 
 beforeEach(() => seed(testData));
 afterAll(() => {
@@ -27,7 +29,7 @@ describe("GET api/topics", () => {
   });
 });
 describe("GET api/", () => {
-  test("200: responds with a 200 status code and responds with a JSON obj with all endpoints", () => {
+  test.only("200: responds with a 200 status code and responds with a JSON obj with all endpoints", () => {
     return request(app)
       .get("/api")
       .expect(200)
@@ -77,3 +79,4 @@ describe("GET /api/articles/:article_id", () => {
     })
   })
 })
+

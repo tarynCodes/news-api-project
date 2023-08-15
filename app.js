@@ -4,6 +4,7 @@ const app = express();
 const {readApi} = require("../be-nc-news/controllers/api-controllers");
 const { getArticleByArticleId } = require("../be-nc-news/controllers/article-controllers")
 
+
 app.get('/api/topics', getTopics)
 
 app.get('/api', readApi)
@@ -25,6 +26,7 @@ app.use((err, request, response, next) => {
     next(err)
   }
 })
+
 
 app.use((err, req, res, next) => {
     console.log(err);
