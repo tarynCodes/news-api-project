@@ -181,6 +181,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         })
       });
   });
+
   test("GET 200: responds with a 200 and an empty array when no comments on an valid article id", () => {
     return request(app)
       .get("/api/articles/2/comments")
@@ -190,6 +191,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(comments).toEqual([]);
       });
   });
+
   test("GET 404: respond with a 404 when no article id is valid but non exsistant and therefore no comments", () => {
     return request(app)
     .get("/api/articles/20000/comments")
