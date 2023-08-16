@@ -24,7 +24,7 @@ exports.getCommentsByArticleId = (request, response, next) => {
       if (!article) {
         return response.status(404).send({ msg: "No article found!" });
       }
-      response.status(200).send({ article, comments });
+      response.status(200).send({ comments });
     })
     .catch((err) => {
       next(err);

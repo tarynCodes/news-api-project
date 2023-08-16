@@ -81,7 +81,7 @@ describe("GET /api/articles/:article_id", () => {
 
 describe("GET /api/articles/:article_id/comments", () => {
   test("GET 200: responds with a 200 status code and gets an array of comments by the article id number in descending order ", () => {
-    const article_id = 9
+    const article_id = 1
     return request(app)
       .get(`/api/articles/${article_id}/comments`)
       .expect(200)
@@ -89,23 +89,96 @@ describe("GET /api/articles/:article_id/comments", () => {
         const { comments } = response.body;
         expect(comments).toBeSortedBy("created_at", {descending: true});
         expect(comments).toMatchObject([
-          {
-            comment_id: 1,
-            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-            article_id: 9,
-            author: "butter_bridge",
-            votes: 16,
-            created_at: "2020-04-06T12:17:00.000Z",
-          },
-          {
-            comment_id: 17,
-            body: "The owls are not what they seem.",
-            article_id: 9,
-            author: "icellusedkars",
-            votes: 20,
-            created_at: "2020-03-14T17:02:00.000Z",
-          },
-        ]);
+            {
+              comment_id: 5,
+              body: 'I hate streaming noses',
+              article_id: 1,
+              author: 'icellusedkars',
+              votes: 0,
+              created_at: '2020-11-03T21:00:00.000Z'
+            },
+            {
+              comment_id: 2,
+              body: 'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
+              article_id: 1,
+              author: 'butter_bridge',
+              votes: 14,
+              created_at: '2020-10-31T03:03:00.000Z'
+            },
+            {
+              comment_id: 18,
+              body: 'This morning, I showered for nine minutes.',
+              article_id: 1,
+              author: 'butter_bridge',
+              votes: 16,
+              created_at: '2020-07-21T00:20:00.000Z'
+            },
+            {
+              comment_id: 13,
+              body: 'Fruit pastilles',
+              article_id: 1,
+              author: 'icellusedkars',
+              votes: 0,
+              created_at: '2020-06-15T10:25:00.000Z'
+            },
+            {
+              comment_id: 7,
+              body: 'Lobster pot',
+              article_id: 1,
+              author: 'icellusedkars',
+              votes: 0,
+              created_at: '2020-05-15T20:19:00.000Z'
+            },
+            {
+              comment_id: 8,
+              body: 'Delicious crackerbreads',
+              article_id: 1,
+              author: 'icellusedkars',
+              votes: 0,
+              created_at: '2020-04-14T20:19:00.000Z'
+            },
+            {
+              comment_id: 6,
+              body: 'I hate streaming eyes even more',
+              article_id: 1,
+              author: 'icellusedkars',
+              votes: 0,
+              created_at: '2020-04-11T21:02:00.000Z'
+            },
+            {
+              comment_id: 12,
+              body: 'Massive intercranial brain haemorrhage',
+              article_id: 1,
+              author: 'icellusedkars',
+              votes: 0,
+              created_at: '2020-03-02T07:10:00.000Z'
+            },
+            {
+              comment_id: 3,
+              body: 'Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.',
+              article_id: 1,
+              author: 'icellusedkars',
+              votes: 100,
+              created_at: '2020-03-01T01:13:00.000Z'
+            },
+            {
+              comment_id: 4,
+              body: ' I carry a log — yes. Is it funny to you? It is not to me.',
+              article_id: 1,
+              author: 'icellusedkars',
+              votes: -100,
+              created_at: '2020-02-23T12:01:00.000Z'
+            },
+            {
+              comment_id: 9,
+              body: 'Superficially charming',
+              article_id: 1,
+              author: 'icellusedkars',
+              votes: 0,
+              created_at: '2020-01-01T03:08:00.000Z'
+            }
+        ])
+        })
       });
   });
   test("GET 200: responds with a 200 and an empty array when no comments on an valid article id", () => {
@@ -135,4 +208,4 @@ describe("GET /api/articles/:article_id/comments", () => {
      expect(msg).toBe("Bad request, no id found!")
     })
   })
-})
+
