@@ -3,9 +3,8 @@ const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const request = require("supertest");
-const readApi = require("../controllers/api-controllers")
-const endpointsFile = require("../endpoints.json")
-
+const readApi = require("../controllers/api-controllers");
+const endpointsFile = require("../endpoints.json");
 
 beforeEach(() => seed(testData));
 afterAll(() => {
@@ -29,12 +28,12 @@ describe("GET api/topics", () => {
   });
 });
 describe("GET api/", () => {
-  test.only("200: responds with a 200 status code and responds with a JSON obj with all endpoints", () => {
+  test("200: responds with a 200 status code and responds with a JSON obj with all endpoints", () => {
     return request(app)
       .get("/api")
       .expect(200)
       .then((readApi) => {
-        expect(readApi.body).toEqual(endpointsFile)
+        expect(readApi.body).toEqual(endpointsFile);
       });
   });
 });
@@ -42,48 +41,98 @@ describe("GET api/", () => {
 describe("GET /api/articles/:article_id", () => {
   test("200: responds with a 200 status code and gets a single article by its id", () => {
     return request(app)
-    .get("/api/articles/1")
-    .expect(200)
-    .then((response) => {
-      const article = response.body.article
-    expect(article).toMatchObject({
-      article_id: 1,
-      title: "Living in the shadow of a great man",
-      topic: "mitch",
-      author: "butter_bridge",
-      body: "I find this existence challenging",
-      votes: 100,
-      article_img_url:
-        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-    })
-    })
-  })
+      .get("/api/articles/1")
+      .expect(200)
+      .then((response) => {
+        const article = response.body.article;
+        expect(article).toMatchObject({
+          article_id: 1,
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          votes: 100,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
 
   test("GET: 400 sends an error message when given an invalid id", () => {
     return request(app)
-    .get('/api/articles/burgers')
-    .expect(400)
-    .then((response) => {
-      const {msg} = response.body
-      expect(msg).toBe('Bad request, no id found!')
-    })
-  })
+      .get("/api/articles/burgers")
+      .expect(400)
+      .then((response) => {
+        const { msg } = response.body;
+        expect(msg).toBe("Bad request, no id found!");
+      });
+  });
 
-  test("GET 404: responds with a 404 when given an valid but non exsistent id", () =>{
+  test("GET 404: responds with a 404 when given an valid but non exsistent id", () => {
     return request(app)
-    .get('/api/articles/300')
+      .get("/api/articles/300")
+      .expect(404)
+      .then((response) => {
+        const { msg } = response.body;
+        expect(msg).toBe("No article found!");
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("GET 200: responds with a 200 status code and gets an array of comments by the article id number in descending order ", () => {
+    const article_id = 9
+    return request(app)
+      .get(`/api/articles/${article_id}/comments`)
+      .expect(200)
+      .then((response) => {
+        const { comments } = response.body;
+        expect(comments).toBeSortedBy("created_at", {descending: true});
+        expect(comments).toMatchObject([
+          {
+            comment_id: 1,
+            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+            article_id: 9,
+            author: "butter_bridge",
+            votes: 16,
+            created_at: "2020-04-06T12:17:00.000Z",
+          },
+          {
+            comment_id: 17,
+            body: "The owls are not what they seem.",
+            article_id: 9,
+            author: "icellusedkars",
+            votes: 20,
+            created_at: "2020-03-14T17:02:00.000Z",
+          },
+        ]);
+      });
+  });
+  test("GET 200: responds with a 200 and an empty array when no comments on an valid article id", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then((response) => {
+        const {comments} = response.body;
+        expect(comments).toEqual([]);
+      });
+  });
+  test("GET 404: respond with a 404 when no article id is valid but non exsistant and therefore no comments", () => {
+    return request(app)
+    .get("/api/articles/20000/comments")
     .expect(404)
     .then((response) => {
       const {msg} = response.body
-      expect(msg).toBe('No article found!');
+      expect(msg).toBe("No article found!")
     })
   })
-})
-
-describe("GET /api/articles/:article_id/comments", () => {
-  test("GET 200: responds with a 200 status code and gets a list of comments by the article id number", () => {
+  test("GET 400: responds with a 400 when the article id is invalid", () => {
     return request(app)
-    .get("/api/articles/1/comments")
-    .expect(200)
+    .get("/api/articles/whatsup/comments")
+    .expect(400)
+    .then((response) => {
+      const {msg} = response.body
+     expect(msg).toBe("Bad request, no id found!")
+    })
   })
 })
