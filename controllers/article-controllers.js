@@ -1,5 +1,5 @@
 
-const {selectArticle, fetchArticles, selectCommentsByArticleId} = require("../models/article-model")
+const {insertComment, selectArticle, fetchArticles, selectCommentsByArticleId} = require("../models/article-model")
 
 exports.getArticles = (request, response, next) => {
     fetchArticles(request.query.sort_by)
@@ -38,3 +38,13 @@ exports.getCommentsByArticleId = (request, response, next) => {
 
 }
 
+exports.postComment = (request, response, next) => {
+    const {article_id} = request.params
+    const newComment = request.body;
+    insertComment(newComment, article_id).then((comment) => {
+    response.status(201).send({comment})
+    })
+    .catch((err) => {
+        next(err)
+    })
+}

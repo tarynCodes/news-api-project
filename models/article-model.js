@@ -1,5 +1,6 @@
 const db = require("../db/connection");
 
+
 exports.fetchArticles = () => {
   return db
     .query(
@@ -49,3 +50,16 @@ exports.selectCommentsByArticleId = (article_id) => {
 })
 }
 
+exports.insertComment = (newComment, article_id) => {
+  const { body, username } = newComment; 
+  return db.query(
+    `
+    INSERT INTO comments (body, author, article_id) 
+    VALUES ($1, $2, $3) 
+    RETURNING *;
+  `,
+    [body, username, article_id] 
+  ).then((result) => {
+    return result.rows[0]
+  });
+};

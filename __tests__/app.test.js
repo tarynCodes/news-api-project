@@ -64,7 +64,7 @@ describe("GET /api/articles/:article_id", () => {
       .expect(400)
       .then((response) => {
         const { msg } = response.body;
-        expect(msg).toBe("Bad request, no id found!");
+        expect(msg).toBe("Bad Request!");
       });
   });
 
@@ -207,7 +207,7 @@ describe("GET /api/articles/:article_id/comments", () => {
     .expect(400)
     .then((response) => {
       const {msg} = response.body
-     expect(msg).toBe("Bad request, no id found!")
+     expect(msg).toBe("Bad Request!")
     })
   })
 
@@ -234,3 +234,41 @@ describe("Get /api/articles", ()=>{
   })
 })
 
+describe("POST /api/articles/:article_id/comments", () => {
+  test("POST 201: posts a comment on a specific article", () => { 
+    return request(app)
+    .post("/api/articles/2/comments")
+    .send({body:"cats have nine lives", username: "butter_bridge", article_id: 2})
+    .expect(201)
+    .then((response) => {
+      const {comment} = response.body
+      expect(Object.keys(comment).length).toBe(6)
+      expect(comment).toHaveProperty("comment_id", 19)
+      expect(comment).toHaveProperty("body","cats have nine lives")
+      expect(comment).toHaveProperty("article_id", 2)
+      expect(comment).toHaveProperty("author", "butter_bridge")
+      expect(comment).toHaveProperty("votes", 0)
+      expect(comment).toHaveProperty("created_at", expect.any(String))
+    })
+  })
+  test("POST 400: Handles missing or incomplete data when posting a comment", () => {
+    return request(app)
+    .post("/api/articles/2/comments")
+    .send({body: "cats have nine lives"})
+    .expect(400)
+    .then((response) => {
+      const {msg} = response.body
+      expect(msg).toBe("Bad Request!")
+    })
+  })
+    test("POST 404: respond with a 404 when the article id is valid but non exsistant and therefore cannot post comment", () => {
+      return request(app)
+      .post("/api/articles/200000000/comments")
+      .send({body:"cats have nine lives", username: "butter_bridge", article_id: 2})
+      .expect(404)
+      .then((response) => {
+        const {msg} = response.body
+        expect(msg).toBe("No article found!")
+      })
+    })
+  })
