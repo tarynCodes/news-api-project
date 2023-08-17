@@ -276,10 +276,9 @@ describe("PATCH /api/articles/:article_id", () => {
         });
       });
   });
-  test("PATCH 200: when vote count is empty, or zero the article stays the same", () => {
+  test("PATCH 200: when vote count is missing the article stays the same", () => {
     return request(app)
       .patch("/api/articles/1")
-      .send({ inc_votes: 0})
       .expect(200)
       .then((response) => {
         const article = response.body;

@@ -46,10 +46,15 @@ exports.getCommentsByArticleId = (request, response, next) => {
 exports.addVotes = (request, response, next) => {
   const { article_id } = request.params;
   const { inc_votes } = request.body;
-  if (typeof inc_votes !== 'number') {
+
+  if (typeof inc_votes === 'undefined') {
+    selectVotesByArticleId(article_id)
+      .then((article) => {
+        response.status(200).send(article);
+      })
+    } else if (typeof inc_votes !== 'number') {
     return response.status(400).send({ msg: "Bad request!" });
   }
-
   selectVotesByArticleId(article_id)
     .then((article) => {
       const newTotalVotes = article.votes + inc_votes;
