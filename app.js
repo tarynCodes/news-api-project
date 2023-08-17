@@ -6,6 +6,8 @@ const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles 
 const { psqlErrors, handles404, customErrors } = require('./errors');
 
 
+
+
 app.use(express.json())
 
 app.get('/api/topics', getTopics)
@@ -15,6 +17,7 @@ app.get('/api', readApi)
 app.get('/api/articles', getArticles)
 
 app.get('/api/articles/:article_id', getArticleByArticleId)
+app.patch('/api/articles/:article_id', addVotes)
 
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId )
 

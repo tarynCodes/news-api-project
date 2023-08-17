@@ -27,8 +27,8 @@ exports.fetchArticles = () => {
 
 exports.selectArticle = (article_id) => {
   return db
-  .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
-  .then((result) => {
+    .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
+    .then((result) => {
       const article = result.rows[0];
       if (!article) {
         return Promise.reject({
@@ -42,13 +42,16 @@ exports.selectArticle = (article_id) => {
 
 exports.selectCommentsByArticleId = (article_id) => {
   return db
-  .query(`SELECT *
+    .query(
+      `SELECT *
    FROM comments WHERE article_id = $1
-   ORDER BY created_at DESC;`, [article_id])
-  .then((result) => {
-    return result.rows;
-})
-}
+   ORDER BY created_at DESC;`,
+      [article_id]
+    )
+    .then((result) => {
+      return result.rows;
+    });
+};
 
 exports.insertComment = (newComment, article_id) => {
   const { body, username } = newComment; 
@@ -64,5 +67,22 @@ exports.insertComment = (newComment, article_id) => {
   });
 };
 
+exports.selectVotesByArticleId = (article_id) => {
+  return db
+    .query(
+      `SELECT * 
+    FROM articles
+      WHERE article_id = $1`,[article_id]
+    )
+    .then((result) => {
+      const article = result.rows[0];
+      if(!article){
+        return Promise.reject({
+          status: 404,
+          msg: "No article found!"
+        })
+      }
+      return article
+    });
+};
 
- 
