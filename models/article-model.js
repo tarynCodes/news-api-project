@@ -63,3 +63,19 @@ exports.insertComment = (newComment, article_id) => {
     return result.rows[0]
   });
 };
+
+exports.selectUsers = () => {
+  return db.query
+(`SELECT username FROM users;`)
+.then((result) => {
+  const user = result.rows[0]
+  if(!user){
+    return Promise.reject({
+      status: 404,
+      msg: "No user found!",
+    });
+  }
+  return user;
+});
+};
+ 
