@@ -2,7 +2,7 @@ const express = require('express');
 const {getTopics} = require("../be-nc-news/controllers/topic-controllers")
 const app = express();
 const {readApi} = require("../be-nc-news/controllers/api-controllers");
-const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles, addVotes } = require("../be-nc-news/controllers/article-controllers");
+const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles, deleteCommentById, changeVotes } = require("../be-nc-news/controllers/article-controllers");
 const { psqlErrors, handles404, customErrors } = require('./errors');
 
 
@@ -17,13 +17,14 @@ app.get('/api', readApi)
 app.get('/api/articles', getArticles)
 
 app.get('/api/articles/:article_id', getArticleByArticleId)
-app.patch('/api/articles/:article_id', addVotes)
+
+app.patch('/api/articles/:article_id', changeVotes)
 
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId )
 
 app.post('/api/articles/:article_id/comments', postComment)
 
-
+app.delete('/api/comments/:comment_id.', deleteCommentById)
 
 app.use(customErrors)
 

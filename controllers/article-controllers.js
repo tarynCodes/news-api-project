@@ -1,10 +1,12 @@
 
+const { commentData } = require("../db/data/test-data");
 const {
   insertComment,
-  selectVotesByArticleId,
   selectArticle,
   fetchArticles,
   selectCommentsByArticleId,
+  removeCommentById,
+  updateVotesByArticleId,
 } = require("../models/article-model");
 
 exports.getArticles = (request, response, next) => {
@@ -57,24 +59,25 @@ exports.postComment = (request, response, next) => {
     })
 }
 
-exports.addVotes = (request, response, next) => {
+exports.changeVotes = (request, response, next) => {
   const { article_id } = request.params;
   const { inc_votes } = request.body;
-
-  if (typeof inc_votes === 'undefined') {
-    selectVotesByArticleId(article_id)
-      .then((article) => {
-        response.status(200).send(article);
+    updateVotesByArticleId(article_id, inc_votes)
+      .then((updatedArticle) => {
+        console.log(updatedArticle)
+        response.status(200).send(updatedArticle);
       })
-    } else if (typeof inc_votes !== 'number') {
-    return response.status(400).send({ msg: "Bad Request, not a number!" });
+      .catch((err) => {
+        next(err);
+      });
   }
-  selectVotesByArticleId(article_id)
-    .then((article) => {
-      const newTotalVotes = article.votes + inc_votes;
-      return response.status(200).send({...article, votes: newTotalVotes });
-    })
-    .catch((err) => {
-      next(err);
-    });
-}
+
+exports.deleteCommentById = (request, response, next) => {
+  const { comment_id } = request.params;
+  console.log(request)
+  removeCommentById(comment_id).then(() => {
+    response.status(204).send();
+  }).catch((err) => {
+    next(err)
+  })
+};
