@@ -7,6 +7,7 @@ const {
   selectCommentsByArticleId,
   removeCommentById,
   updateVotesByArticleId,
+  selectUsers,
 } = require("../models/article-model");
 
 exports.getArticles = (request, response, next) => {
@@ -71,3 +72,11 @@ exports.changeVotes = (request, response, next) => {
       });
   }
 
+exports.getUsers = (request, response, next) => {
+ selectUsers().then((users) => {
+  response.status(200).send({users})
+ })
+ .catch((err) => {
+  next(err)
+ })
+}

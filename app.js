@@ -2,7 +2,7 @@ const express = require('express');
 const {getTopics} = require("../be-nc-news/controllers/topic-controllers")
 const app = express();
 const {readApi} = require("../be-nc-news/controllers/api-controllers");
-const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles, changeVotes } = require("../be-nc-news/controllers/article-controllers");
+const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles, changeVotes, getUsers } = require("../be-nc-news/controllers/article-controllers");
 const { psqlErrors, handles404, customErrors } = require('./errors');
 
 
@@ -24,7 +24,7 @@ app.get('/api/articles/:article_id/comments', getCommentsByArticleId )
 
 app.post('/api/articles/:article_id/comments', postComment)
 
-
+app.get('/api/users', getUsers)
 
 app.use(customErrors)
 
@@ -32,6 +32,9 @@ app.use(handles404)
 
 app.use(psqlErrors) 
 
+app.use((req, res) => {
+  res.status(404).send({ msg: 'Not Found'})
+})
 
 app.use((err, req, res, next) => {
     console.log(err);

@@ -387,9 +387,21 @@ describe("POST /api/articles/:article_id/comments", () => {
     })
   })
 
-  describe("GET /users", () => {
+  describe("GET /api/users", () => {
     test("GET 200: responds with an array of users with username, name and their avatar url as properties", () => {
       return request(app)
-      .get("/users")
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const {users} = response.body;  
+        users.forEach((user) => {
+          expect(Object.keys(user).length).toBe(3)
+            expect(user).toHaveProperty("username", expect.any(String))
+            expect(user).toHaveProperty("name", expect.any(String))
+            expect(user).toHaveProperty("avatar_url")
+        })
+      })
     })
   })
+
+
