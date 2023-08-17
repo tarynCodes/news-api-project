@@ -387,6 +387,7 @@ describe("POST /api/articles/:article_id/comments", () => {
     })
   })
 
+
   describe("GET /api/users", () => {
     test("GET 200: responds with an array of users with username, name and their avatar url as properties", () => {
       return request(app)
@@ -415,3 +416,30 @@ describe("ALL /notapath", () => {
     })
   })
 })
+
+  describe("DELETE /api/comments/:comment_id", () => {
+    test('DELETE: 204 deletes a comment by comment id', () => {
+      return request(app)
+       .delete("/api/comments/1")
+        .expect(204);
+      })
+      test('DELETE:404 responds with an appropriate error message when given a non-existent comment id', () => {
+        return request(app)
+          .delete('/api/comments/1000000')
+          .expect(404)
+          .then((response) => {
+            const {msg} = response.body
+            expect(msg).toBe('comment does not exist');
+          });
+      });
+      test('DELETE:400 responds with an appropriate message when given a bad comment id type', () => {
+        return request(app)
+        .delete('/api/comments/burgers')
+        .expect(400)
+        .then((response) => {
+          const {msg} = response.body
+          expect(msg).toBe('Bad Request!')
+        })
+      })
+    })
+

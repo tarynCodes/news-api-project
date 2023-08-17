@@ -2,10 +2,8 @@ const express = require('express');
 const {getTopics} = require("../be-nc-news/controllers/topic-controllers")
 const app = express();
 const {readApi} = require("../be-nc-news/controllers/api-controllers");
-const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles, changeVotes, getUsers } = require("../be-nc-news/controllers/article-controllers");
+const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles, changeVotes, deleteCommentById, getUsers } = require("../be-nc-news/controllers/article-controllers");
 const { psqlErrors, handles404, customErrors } = require('./errors');
-
-
 
 
 app.use(express.json())
@@ -25,6 +23,9 @@ app.get('/api/articles/:article_id/comments', getCommentsByArticleId )
 app.post('/api/articles/:article_id/comments', postComment)
 
 app.get('/api/users', getUsers)
+
+app.delete('/api/comments/:comment_id', deleteCommentById)
+
 
 app.use(customErrors)
 
