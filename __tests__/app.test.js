@@ -387,6 +387,36 @@ describe("POST /api/articles/:article_id/comments", () => {
     })
   })
 
+
+  describe("GET /api/users", () => {
+    test("GET 200: responds with an array of users with username, name and their avatar url as properties", () => {
+      return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const {users} = response.body;  
+        users.forEach((user) => {
+          expect(Object.keys(user).length).toBe(3)
+            expect(user).toHaveProperty("username", expect.any(String))
+            expect(user).toHaveProperty("name", expect.any(String))
+            expect(user).toHaveProperty("avatar_url")
+        })
+      })
+    })
+  })
+
+describe("ALL /notapath", () => {
+  test("404: should respond with a 404 when a path is not found", () => {
+    return request(app)
+    .get("/api/hummus")
+    .expect(404)
+    .then((response) => {
+      const {msg} = response.body
+      expect(msg).toBe("Not Found")
+    })
+  })
+})
+
   describe("DELETE /api/comments/:comment_id", () => {
     test('DELETE: 204 deletes a comment by comment id', () => {
       return request(app)
@@ -412,3 +442,4 @@ describe("POST /api/articles/:article_id/comments", () => {
         })
       })
     })
+

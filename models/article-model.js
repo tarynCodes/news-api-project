@@ -86,6 +86,15 @@ exports.updateVotesByArticleId = (article_id, newVotes) => {
     });
 };
 
+
+exports.selectUsers = () =>{
+  return db.query
+  (`SELECT * FROM Users;`)
+  .then((result) => {
+    return result.rows
+  })
+}
+
 exports.removeCommentById = (comment_id) => {
   return db
     .query("DELETE FROM comments WHERE comment_id = $1;", [comment_id])
