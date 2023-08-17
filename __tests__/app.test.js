@@ -404,4 +404,14 @@ describe("POST /api/articles/:article_id/comments", () => {
     })
   })
 
-
+describe("ALL /notapath", () => {
+  test("404: should respond with a 404 when a path is not found", () => {
+    return request(app)
+    .get("/api/hummus")
+    .expect(404)
+    .then((response) => {
+      const {msg} = response.body
+      expect(msg).toBe("Not Found")
+    })
+  })
+})

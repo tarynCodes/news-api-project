@@ -90,7 +90,6 @@ exports.selectUsers = () =>{
   return db.query
   (`SELECT * FROM Users;`)
   .then((result) => {
-    console.log(result.rows)
     return result.rows
   })
 }
