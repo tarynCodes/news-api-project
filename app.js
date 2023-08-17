@@ -2,7 +2,10 @@ const express = require('express');
 const {getTopics} = require("../be-nc-news/controllers/topic-controllers")
 const app = express();
 const {readApi} = require("../be-nc-news/controllers/api-controllers");
-const { addVotes, getArticleByArticleId, getCommentsByArticleId, getArticles } = require("../be-nc-news/controllers/article-controllers")
+const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles } = require("../be-nc-news/controllers/article-controllers");
+const { psqlErrors, handles404, customErrors } = require('./errors');
+
+
 
 
 app.use(express.json())
@@ -18,21 +21,16 @@ app.patch('/api/articles/:article_id', addVotes)
 
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId )
 
-app.use((err, request, response, next) => {
-  if (err.status === 404) {
-    response.status(404).send({ msg: 'No article found!' });
-  } else {
-    next(err);
-  }
-});
+app.post('/api/articles/:article_id/comments', postComment)
 
-app.use((err, request, response, next) => {
-  if (err.code === '22P02') {
-    response.status(400).send({ msg: 'Bad request, no id found!' });
-  }else{
-    next(err)
-  }
-})
+
+
+app.use(customErrors)
+
+app.use(handles404)
+
+app.use(psqlErrors) 
+
 
 app.use((err, req, res, next) => {
     console.log(err);

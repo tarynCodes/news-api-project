@@ -1,4 +1,6 @@
+
 const {
+  insertComment,
   selectVotesByArticleId,
   selectArticle,
   fetchArticles,
@@ -47,6 +49,16 @@ exports.addVotes = (request, response, next) => {
   const { article_id } = request.params;
   const { inc_votes } = request.body;
 
+exports.postComment = (request, response, next) => {
+    const {article_id} = request.params
+    const newComment = request.body;
+    insertComment(newComment, article_id).then((comment) => {
+    response.status(201).send({comment})
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
   if (typeof inc_votes === 'undefined') {
     selectVotesByArticleId(article_id)
       .then((article) => {

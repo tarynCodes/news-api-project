@@ -64,7 +64,7 @@ describe("GET /api/articles/:article_id", () => {
       .expect(400)
       .then((response) => {
         const { msg } = response.body;
-        expect(msg).toBe("Bad request, no id found!");
+        expect(msg).toBe("Bad Request!");
       });
   });
 
@@ -206,10 +206,12 @@ test("GET 400: responds with a 400 when the article id is invalid", () => {
     .get("/api/articles/whatsup/comments")
     .expect(400)
     .then((response) => {
-      const { msg } = response.body;
-      expect(msg).toBe("Bad request, no id found!");
-    });
-});
+
+      const {msg} = response.body
+     expect(msg).toBe("Bad Request!")
+    })
+  })
+
 
 describe("GET/api/articles", () => {
   test("GET 200: responds with an array of articles sorted by descending order", () => {
@@ -315,7 +317,7 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(msg).toBe("Bad request!");
   })
 })
-
+ 
 test("PATCH 404: respond with a 404 when article id is valid but non exsistant and therefore no patch request", () => {
   return request(app)
     .patch("/api/articles/20000")
@@ -323,7 +325,85 @@ test("PATCH 404: respond with a 404 when article id is valid but non exsistant a
     .expect(404)
     .then((response) => {
       const { msg } = response.body;
-      expect(msg).toBe("No article found!");
+      expect(msg).toBe("Invalid Input!");
     });
   });
 });
+
+
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("POST 201: posts a comment on a specific article", () => { 
+    return request(app)
+    .post("/api/articles/2/comments")
+    .send({body:"cats have nine lives", username: "butter_bridge", article_id: 2})
+    .expect(201)
+    .then((response) => {
+      const {comment} = response.body
+      expect(Object.keys(comment).length).toBe(6)
+      expect(comment).toHaveProperty("comment_id", 19)
+      expect(comment).toHaveProperty("body","cats have nine lives")
+      expect(comment).toHaveProperty("article_id", 2)
+      expect(comment).toHaveProperty("author", "butter_bridge")
+      expect(comment).toHaveProperty("votes", 0)
+      expect(comment).toHaveProperty("created_at", expect.any(String))
+    })
+  })
+  test("POST 201: still posts a comment on a specific article with unnecessary properties but ignores them", () => { 
+    return request(app)
+    .post("/api/articles/2/comments")
+    .send({body:"cats have nine lives", username: "butter_bridge", article_id: 2, heading: "lovely cats"  })
+    .expect(201)
+    .then((response) => {
+      const {comment} = response.body
+      expect(Object.keys(comment).length).toBe(6)
+      expect(comment).toHaveProperty("comment_id", 19)
+      expect(comment).toHaveProperty("body","cats have nine lives")
+      expect(comment).toHaveProperty("article_id", 2)
+      expect(comment).toHaveProperty("author", "butter_bridge")
+      expect(comment).toHaveProperty("votes", 0)
+      expect(comment).toHaveProperty("created_at", expect.any(String))
+    })
+  })
+  test("POST 400: Handles missing or incomplete data when posting a comment", () => {
+    return request(app)
+    .post("/api/articles/2/comments")
+    .send({body: "cats have nine lives"})
+    .expect(400)
+    .then((response) => {
+      const {msg} = response.body
+      expect(msg).toBe("Bad Request!")
+    })
+  })
+  test("POST 400: Handles an invalid article id", () => {
+    return request(app)
+    .post("/api/articles/strawberry/comments")
+    .send({body: "cats have nine lives", username: "butter_bridge"})
+    .expect(400)
+    .then((response) => {
+      const {msg} = response.body
+      expect(msg).toBe("Bad Request!")
+    })
+  })
+    test("POST 404: respond with a 404 when the article id is valid but non exsistant and therefore cannot post comment", () => {
+      return request(app)
+      .post("/api/articles/200000000/comments")
+      .send({body:"cats have nine lives", username: "butter_bridge"})
+      .expect(404)
+      .then((response) => {
+        const {msg} = response.body
+
+        expect(msg).toBe("Invalid input!")
+      })
+    })
+    test("POST 404: respond with a 404 when the user name doesnt exsist in the db", () => {
+      return request(app)
+      .post("/api/articles/2/comments")
+      .send({body:"cats have nine lives", username: "taryn_codes"})
+      .expect(404)
+      .then((response) => {
+        const {msg} = response.body
+        expect(msg).toBe("Invalid input!")
+      })
+    })
+  })
