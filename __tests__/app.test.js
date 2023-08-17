@@ -386,3 +386,10 @@ describe("POST /api/articles/:article_id/comments", () => {
       })
     })
   })
+
+  describe("GET /users", () => {
+    test("GET 200: responds with an array of users with username, name and their avatar url as properties", () => {
+      return request(app)
+      .get("/users")
+    })
+  })
