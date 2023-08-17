@@ -64,7 +64,6 @@ exports.changeVotes = (request, response, next) => {
   const { inc_votes } = request.body;
     updateVotesByArticleId(article_id, inc_votes)
       .then((updatedArticle) => {
-        console.log(updatedArticle)
         response.status(200).send(updatedArticle);
       })
       .catch((err) => {
@@ -72,12 +71,3 @@ exports.changeVotes = (request, response, next) => {
       });
   }
 
-exports.deleteCommentById = (request, response, next) => {
-  const { comment_id } = request.params;
-  console.log(request)
-  removeCommentById(comment_id).then(() => {
-    response.status(204).send();
-  }).catch((err) => {
-    next(err)
-  })
-};

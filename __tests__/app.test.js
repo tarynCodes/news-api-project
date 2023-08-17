@@ -235,7 +235,7 @@ describe("GET/api/articles", () => {
   });
 });
 
-describe.only("PATCH /api/articles/:article_id", () => {
+describe("PATCH /api/articles/:article_id", () => {
   test("PATCH 200: responds with an updated vote count incremented by one on the article by article_id", () => {
     return request(app)
       .patch("/api/articles/5")
@@ -386,11 +386,3 @@ describe("POST /api/articles/:article_id/comments", () => {
       })
     })
   })
-
-  describe("DELETE /api/comments/:comment_id", () => {
-    test('DELETE: 204 deletes a comment by comment id', () => {
-      return request(app)
-      .delete("/api/comments/1")
-      .expect(204);
-  })
-})
