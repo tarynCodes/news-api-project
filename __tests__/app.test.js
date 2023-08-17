@@ -260,6 +260,7 @@ describe("PATCH /api/articles/:article_id", () => {
     return request(app)
       .patch("/api/articles/1")
       .send({ inc_votes: -5 })
+      .expect(200)
       .then((response) => {
         const article = response.body;
         expect(article).toMatchObject({
@@ -274,5 +275,26 @@ describe("PATCH /api/articles/:article_id", () => {
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
         });
       });
+  });
+  test("PATCH 400: responds with a 400 when the article id is invalid when attempting to add votes", () => {
+    return request(app)
+      .patch("/api/articles/burgers")
+      .send({inc_votes: 6})
+      .expect(400)
+      .then((response) => {
+        const { msg } = response.body;
+        expect(msg).toBe("Bad request, no id found!");
+      });
+  });
+
+test("PATCH 404: respond with a 404 when article id is valid but non exsistant and therefore no patch request", () => {
+  return request(app)
+    .patch("/api/articles/20000")
+    .send({inc_votes: 7})
+    .expect(404)
+    .then((response) => {
+      const { msg } = response.body;
+      expect(msg).toBe("No article found!");
+    });
   });
 });
