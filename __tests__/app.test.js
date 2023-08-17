@@ -192,7 +192,7 @@ test("GET 200: responds with a 200 and an empty array when no comments on an val
     });
 });
 
-test("GET 404: respond with a 404 when no article id is valid but non exsistant and therefore no comments", () => {
+test("GET 404: respond with a 404 when article id is valid but non exsistant and therefore no comments", () => {
   return request(app)
     .get("/api/articles/20000/comments")
     .expect(404)
@@ -304,7 +304,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(400)
       .then((response) => {
         const { msg } = response.body;
-        expect(msg).toBe("Bad request, no id found!");
+        expect(msg).toBe("Bad Request!");
       });
   });
   test("PATCH 400: responds with a 400 with an incorrect body - (inc_votes is not a number)", () => {
@@ -314,7 +314,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(400)
       .then((response) => {
         const { msg } = response.body;
-        expect(msg).toBe("Bad request!");
+        expect(msg).toBe("Bad Request, not a number!");
   })
 })
  
@@ -325,7 +325,7 @@ test("PATCH 404: respond with a 404 when article id is valid but non exsistant a
     .expect(404)
     .then((response) => {
       const { msg } = response.body;
-      expect(msg).toBe("Invalid Input!");
+      expect(msg).toBe("No article found!");
     });
   });
 });

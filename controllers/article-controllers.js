@@ -45,9 +45,6 @@ exports.getCommentsByArticleId = (request, response, next) => {
     });
 };
 
-exports.addVotes = (request, response, next) => {
-  const { article_id } = request.params;
-  const { inc_votes } = request.body;
 
 exports.postComment = (request, response, next) => {
     const {article_id} = request.params
@@ -59,13 +56,18 @@ exports.postComment = (request, response, next) => {
         next(err)
     })
 }
+
+exports.addVotes = (request, response, next) => {
+  const { article_id } = request.params;
+  const { inc_votes } = request.body;
+
   if (typeof inc_votes === 'undefined') {
     selectVotesByArticleId(article_id)
       .then((article) => {
         response.status(200).send(article);
       })
     } else if (typeof inc_votes !== 'number') {
-    return response.status(400).send({ msg: "Bad request!" });
+    return response.status(400).send({ msg: "Bad Request, not a number!" });
   }
   selectVotesByArticleId(article_id)
     .then((article) => {
@@ -75,4 +77,4 @@ exports.postComment = (request, response, next) => {
     .catch((err) => {
       next(err);
     });
-};
+}

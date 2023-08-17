@@ -2,7 +2,7 @@ const express = require('express');
 const {getTopics} = require("../be-nc-news/controllers/topic-controllers")
 const app = express();
 const {readApi} = require("../be-nc-news/controllers/api-controllers");
-const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles } = require("../be-nc-news/controllers/article-controllers");
+const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles, addVotes } = require("../be-nc-news/controllers/article-controllers");
 const { psqlErrors, handles404, customErrors } = require('./errors');
 
 
