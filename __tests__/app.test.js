@@ -276,6 +276,26 @@ describe("PATCH /api/articles/:article_id", () => {
         });
       });
   });
+  test("PATCH 200: when vote count is empty, or zero the article stays the same", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 0})
+      .expect(200)
+      .then((response) => {
+        const article = response.body;
+        expect(article).toMatchObject({
+          article_id: 1,
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 100,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        })
+      })
+    });
   test("PATCH 400: responds with a 400 when the article id is invalid when attempting to add votes", () => {
     return request(app)
       .patch("/api/articles/burgers")
@@ -286,6 +306,16 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(msg).toBe("Bad request, no id found!");
       });
   });
+  test("PATCH 400: responds with a 400 with an incorrect body - (inc_votes is not a number)", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({inc_votes: "six"})
+      .expect(400)
+      .then((response) => {
+        const { msg } = response.body;
+        expect(msg).toBe("Bad request!");
+  })
+})
 
 test("PATCH 404: respond with a 404 when article id is valid but non exsistant and therefore no patch request", () => {
   return request(app)
