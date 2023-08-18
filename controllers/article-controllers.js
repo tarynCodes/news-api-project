@@ -1,5 +1,4 @@
 
-const { commentData } = require("../db/data/test-data");
 const {
   insertComment,
   selectArticle,
@@ -11,9 +10,10 @@ const {
 } = require("../models/article-model");
 
 exports.getArticles = (request, response, next) => {
-  fetchArticles(request.query.sort_by)
+  const {topic, sort_by, order} = request.query;
+  fetchArticles(topic, sort_by, order)
     .then((articles) => {
-      response.status(200).send({ articles });
+      response.status(200).send({articles : articles});
     })
     .catch((err) => {
       next(err);

@@ -68,7 +68,7 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 
-  test("GET 404: responds with a 404 when given an valid but non exsistent id", () => {
+  test("GET 404: responds with a 404 when given an valid but non existent id", () => {
     return request(app)
       .get("/api/articles/300")
       .expect(404)
@@ -87,7 +87,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect(200)
       .then((response) => {
         const { comments } = response.body;
-        expect(comments).toBeSortedBy("created_at", { descending: true });
+        expect(comments).toBeSorted("created_at", { descending: true });
         expect(comments).toMatchObject([
           {
             comment_id: 5,
@@ -218,7 +218,7 @@ describe("GET/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then((response) => {
-        const { articles } = response.body;
+        const {articles}  = response.body;
         expect(articles).toBeSortedBy("created_at", { descending: true });
         expect(articles.length).toBeGreaterThan(0);
         articles.forEach((article) => {
@@ -371,7 +371,6 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(404)
       .then((response) => {
         const {msg} = response.body
-
         expect(msg).toBe("Invalid input!")
       })
     })
@@ -443,3 +442,79 @@ describe("ALL /notapath", () => {
       })
     })
 
+describe('GET /api/articles', () => {
+  test("200: responds with a 200 and filters the articles by topic", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then((response) => {
+        const {articles} = response.body
+        articles.forEach(article => {
+          expect(article.topic).toBe('mitch');
+        })
+      });
+  });
+  test("200: responds with a 200 and sorts the articles by author in descending order", () => {
+    return request(app)
+    .get("/api/articles?sort_by=author")
+    .expect(200)
+    .then((response) => {
+      const {articles} = response.body
+      expect(articles).toBeSortedBy('author', {descending: true})
+    })
+  })
+  test("200: responds with a 200 and sorts the articles by article_id in ascending order", () => {
+    return request(app)
+    .get("/api/articles?sort_by=article_id&order=asc")
+    .expect(200)
+    .then((response) => {
+      const {articles} = response.body
+      expect(articles).toBeSortedBy('article_id')
+    })
+  })
+  test("200: responds with a 200 and sorts the articles by votes in descending order",() => {
+    return request(app)
+    .get("/api/articles?sort_by=votes&order=asc")
+    .expect(200)
+    .then((response) => {
+      const {articles} = response.body
+      expect(articles).toBeSortedBy('votes')
+    })
+  })
+  test("400: responds with a 400 with an invalid sort query", () => {
+    return request(app)
+    .get("/api/articles?sort_by=banana")
+    .expect(400)
+    .then((response) => {
+      const {msg} = response.body
+      expect(msg).toBe("Invalid sort query")
+    })
+  })
+  test("400: responds with a 400 with an invalid order query", () => {
+    return request(app)
+    .get("/api/articles?order=burgers")
+    .expect(400)
+    .then((response) => {
+      const {msg} = response.body
+      expect(msg).toBe("Invalid order query")
+    })
+  })
+  test("404: responds with a 404 when topic exists but doesn't have any articles", () => {
+    return request(app)
+    .get("/api/articles?topic=paper")
+    .expect(404)
+    .then((response) => {
+      const {msg} = response.body
+      expect(msg).toBe("No articles for this topic")
+    })
+  })
+  test("404: responds with a 404 for a valid topic query but doesn't exist", () => {
+    return request(app)
+    .get("/api/articles?topic=scotland")
+    .expect(404)
+    .then((response) => {
+      const {msg} = response.body
+      expect(msg).toBe("No articles for this topic")
+    })
+  })
+})

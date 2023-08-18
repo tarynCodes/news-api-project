@@ -1,9 +1,8 @@
 const db = require("../db/connection");
 
-
-exports.fetchArticles = () => {
-  return db
-    .query(
+exports.fetchArticles = (topic, sort_by = 'created_at', order = 'desc') => {
+  const valueArr = []
+  let queryString =
       `
       SELECT
           articles.author,
@@ -14,16 +13,35 @@ exports.fetchArticles = () => {
           articles.votes,
           article_img_url,
           COUNT(comments.article_id) AS comment_count
-      FROM articles
-      LEFT JOIN comments ON articles.article_id = comments.article_id
-      GROUP BY articles.article_id 
-      ORDER BY articles.created_at DESC;
+          FROM articles
+          LEFT JOIN comments ON articles.article_id = comments.article_id
   `
-    )
-    .then((result) => {
-      return result.rows;
-    });
+  if (!["article_id", "created_at", "votes", "title", "author"].includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Invalid sort query" });
+  }
+
+  if (!["asc", "desc"].includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid order query" });
+  }
+
+  if(topic){
+    queryString += ` WHERE topic = $1`
+    valueArr.push(topic)
+    
+  }
+    queryString +=`
+    GROUP BY articles.article_id
+    ORDER BY ${sort_by} ${order};`
+
+  return db.query(queryString, valueArr)
+  .then((result) => {
+    if (result.rowCount === 0 && !topic.topic){
+      return Promise.reject({status: 404, msg: "No articles for this topic"})
+    }
+    return result.rows
+  })
 };
+
 
 exports.selectArticle = (article_id) => {
   return db
