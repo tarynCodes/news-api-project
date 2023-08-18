@@ -8,12 +8,14 @@ const {
   updateVotesByArticleId,
   selectUsers,
 } = require("../models/article-model");
+const { checkIfTopicExists } = require("../models/topic-models");
 
 exports.getArticles = (request, response, next) => {
   const {topic, sort_by, order} = request.query;
-  fetchArticles(topic, sort_by, order)
+  Promise.all([fetchArticles(topic, sort_by, order),
+  checkIfTopicExists(topic)])
     .then((articles) => {
-      response.status(200).send({articles : articles});
+      response.status(200).send({articles : articles[0]});
     })
     .catch((err) => {
       next(err);

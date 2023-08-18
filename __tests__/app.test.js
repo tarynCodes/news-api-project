@@ -474,11 +474,11 @@ describe('GET /api/articles', () => {
   })
   test("200: responds with a 200 and sorts the articles by votes in descending order",() => {
     return request(app)
-    .get("/api/articles?sort_by=votes&order=asc")
+    .get("/api/articles?sort_by=votes&order=desc")
     .expect(200)
     .then((response) => {
       const {articles} = response.body
-      expect(articles).toBeSortedBy('votes')
+      expect(articles).toBeSortedBy('votes', {descending: true})
     })
   })
   test("400: responds with a 400 with an invalid sort query", () => {
@@ -499,13 +499,13 @@ describe('GET /api/articles', () => {
       expect(msg).toBe("Invalid order query")
     })
   })
-  test("200: responds with a 404 when topic exists but doesn't have any articles", () => {
+  test("200: responds with a 200 when topic exists but doesn't have any articles", () => {
     return request(app)
     .get("/api/articles?topic=paper")
-    .expect(404)
+    .expect(200)
     .then((response) => {
-      const {msg} = response.body
-      expect(msg).toBe("No articles for this topic")
+      const {articles} = response.body
+      expect(articles).toEqual([])
     })
   })
   test("404: responds with a 404 for a valid topic query but doesn't exist", () => {
@@ -514,7 +514,7 @@ describe('GET /api/articles', () => {
     .expect(404)
     .then((response) => {
       const {msg} = response.body
-      expect(msg).toBe("No articles for this topic")
+      expect(msg).toBe("topic doesn't exist")
     })
   })
 })

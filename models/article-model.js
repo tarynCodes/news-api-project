@@ -35,9 +35,6 @@ exports.fetchArticles = (topic, sort_by = 'created_at', order = 'desc') => {
 
   return db.query(queryString, valueArr)
   .then((result) => {
-    if (result.rowCount === 0 && !topic.topic){
-      return Promise.reject({status: 404, msg: "No articles for this topic"})
-    }
     return result.rows
   })
 };
