@@ -499,7 +499,7 @@ describe('GET /api/articles', () => {
       expect(msg).toBe("Invalid order query")
     })
   })
-  test("404: responds with a 404 when topic exists but doesn't have any articles", () => {
+  test("200: responds with a 404 when topic exists but doesn't have any articles", () => {
     return request(app)
     .get("/api/articles?topic=paper")
     .expect(404)

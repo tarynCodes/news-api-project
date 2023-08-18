@@ -1,8 +1,8 @@
 const express = require('express');
-const {getTopics} = require("../be-nc-news/controllers/topic-controllers.js")
+const {getTopics} = require("./controllers/topic-controllers.js")
 const app = express();
-const {readApi} = require("../be-nc-news/controllers/api-controllers.js");
-const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles, changeVotes, deleteCommentById, getUsers } = require("../be-nc-news/controllers/article-controllers.js");
+const {readApi} = require("./controllers/api-controllers.js");
+const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles, changeVotes, deleteCommentById, getUsers } = require("./controllers/article-controllers.js");
 const { psqlErrors, handles404, customErrors } = require('./errors.js');
 
 
