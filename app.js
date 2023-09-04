@@ -7,6 +7,7 @@ const { psqlErrors, handles404, customErrors } = require('./errors.js');
 const cors = require('cors')
 
 app.use(cors())
+
 app.use(express.json())
 
 app.get('/api/topics', getTopics)
