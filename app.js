@@ -4,8 +4,9 @@ const app = express();
 const {readApi} = require("./controllers/api-controllers.js");
 const { postComment, getArticleByArticleId, getCommentsByArticleId, getArticles, changeVotes, deleteCommentById, getUsers } = require("./controllers/article-controllers.js");
 const { psqlErrors, handles404, customErrors } = require('./errors.js');
+const cors = require('cors')
 
-
+app.use(cors())
 app.use(express.json())
 
 app.get('/api/topics', getTopics)
