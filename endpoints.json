@@ -1,5 +1,5 @@
-
- { "GET /api": {
+{
+  "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
   "GET /api/topics": {
@@ -11,10 +11,11 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all articles",
-    "queries": ["article_id","author", "topic", "sort_by", "order"],
+    "queries": ["article_id", "author", "topic"],
     "exampleResponse": {
       "articles": [
-        { "article_id": 1,
+        {
+          "article_id": 1,
           "title": "Seafood substitutions are increasing",
           "topic": "cooking",
           "author": "weegembump",
@@ -26,30 +27,90 @@
       ]
     }
   },
-  "GET /api/users":{
-   "description" : "serves an array of all users",
-   "queries":["username", "name", "avatar_url", "sort_by"],
-   "exampleResponse": {
-    "users":[{
-      "username": "butter_bridge",
-      "name": "jonny",
-      "avatar_url":
-      "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
-    }]
-   }
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": ["username", "name", "avatar_url", "sort_by"],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "butter_bridge",
+          "name": "jonny",
+          "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:articles_id": {
+    "description": "returns an object containing information relevant to the article which matches the article id",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "article_id": 3,
+        "title": "22 Amazing open source React projects",
+        "topic": "coding",
+        "author": "happyamy2016",
+        "body": "This is a collection of open source apps built with React.JS library. In this observation, we compared nearly 800 projects to pick the top 22. (React Native: 11, React: 11). To evaluate the quality, Mybridge AI considered a variety of factors to determine how useful the projects are for programmers. To give you an idea on the quality, the average number of Github stars from the 22 projects was 1,681.",
+        "created_at": "2020-02-29T11:12:00.000Z",
+        "votes": 0,
+        "article_img_url": "https://images.pexels.com/photos/11035471/pexels-photo-11035471.jpeg?w=700&h=700",
+        "comment_count": "10"
+      }
+    }
   },
 
-  "GET /api/comments": {
-    "description" : "serves an array of all comments",
-    "queries":["author", "votes", "article_id", "sort_by"],
+  "GET /api/article/:article_id/comments": {
+    "description": "serves an array of all comments",
+    "queries": ["author", "votes", "article_id", "sort_by"],
     "exampleResponse": {
-     "comments":[{
-      "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-      "votes": 16,
-      "author": "butter_bridge",
-      "article_id": 9,
-      "created_at": 1586179020000
-     }]
+      "comments": [
+        {
+          "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+          "votes": 16,
+          "author": "butter_bridge",
+          "article_id": 9,
+          "created_at": 1586179020000
+        }
+      ]
     }
-   }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "adds a new comment to an article and returns the posted comment",
+    "queries": [],
+    "exampleRequest": {
+      "username": "butter_bridge",
+      "body": "This is a new comment."
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 7,
+        "author": "butter_bridge",
+        "article_id": 9,
+        "votes": 0,
+        "created_at": "2020-04-03T17:33:32.961Z",
+        "body": "This is a new comment."
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id/comments/:comment_id": {
+    "description": "increments the vote property of a comment and returns the updated comment",
+    "queries": [],
+    "exampleRequest": {
+      "inc_votes": 1
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 7,
+        "author": "butter_bridge",
+        "article_id": 9,
+        "votes": 1,
+        "created_at": "2020-04-03T17:33:32.961Z",
+        "body": "This is a new comment."
+      }
+    }
+  },
+  "DELETE /api/articles/:article_id/comments/:comment_id": {
+    "description": "deletes a comment and returns no content",
+    "queries": [],
+    "exampleResponse": {}
   }
+}
